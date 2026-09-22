@@ -15,3 +15,6 @@ SafeRoute SA is a Kotlin/Jetpack Compose Android safety prototype for OPSC6312 P
 | Tests | JUnit tests cover validation. |
 | Automation | GitHub Actions runs unit tests and builds a debug APK. |
 
+Youtube video link
+https://youtu.be/CY-z236RZow?si=iRXX8ymZza2XqhgT 
+
