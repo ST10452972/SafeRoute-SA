@@ -224,12 +224,6 @@ The workflow:
 
 After pushing the project to GitHub, the **Actions** tab can be used to check whether the build completed successfully.
 
-A screenshot of the successful workflow can be added here:
-
-```text
-docs/images/github-actions.png
-```
-
 The OPSC6312 brief specifically requires the project to use GitHub and GitHub Actions for automated testing and building.
 
 ## Part 2 Scope and Future Work
