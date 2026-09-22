@@ -29,23 +29,6 @@ The demonstration video will show the main features of the app and explain what 
 * Using the SOS button
 * Viewing the stored information in the Firebase Console
 
-## Screenshots
-
-Screenshots of the working app will be added before submission.
-
-| Screen                                | Image                              |
-| ------------------------------------- | ---------------------------------- |
-| Login / registration                  | `docs/images/login.png`            |
-| Safety dashboard and SOS confirmation | `docs/images/dashboard.png`        |
-| Emergency contact saved               | `docs/images/contact.png`          |
-| Incident report saved                 | `docs/images/incident.png`         |
-| Nearby police-station search          | `docs/images/resources.png`        |
-| Firebase Authentication and Firestore | `docs/images/firebase-console.png` |
-| GitHub Actions                        | `docs/images/github-actions.png`   |
-
-<img width="720" height="1600" alt="WhatsApp Image 2026-09-22 at 22 35 16 (1)" src="https://github.com/user-attachments/assets/7b519606-3a37-404f-a642-7e47840495b0" />
-
-
 
 ## Features Implemented
 
