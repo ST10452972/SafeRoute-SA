@@ -3,7 +3,7 @@
 > **OPSC6312 Part 3 - Final app development and evaluation**  
 > Student: Jared Williams | Student number: ST10452972  
 > Android package: `com.example.opsc6312_poe` | Version: 2.0.0  
-> GitHub repository: **[ADD GITHUB REPOSITORY URL]**
+> GitHub repository: (https://github.com/ST10452972/SafeRoute-SA)
 
 ## Project purpose
 
@@ -44,7 +44,7 @@ This table describes the current source code. “Implemented” means code exist
 | Blob/object storage | **Not implemented yet.** The current app does not upload files to Firebase Storage or another object-storage service. Part 3 requires blob storage; complete and test a private file upload before claiming this requirement is met, or get lecturer approval for an alternative. |
 | Location and map features from Part 1 | Live GPS, location sharing, route display and a safety map are not implemented. |
 
-The assignment rubric includes “User Defined 4” and “User Defined 5” without naming those features in the brief. Confirm which features your lecturer expects and identify them in the demonstration. **[ADD THE LECTURER-APPROVED USER-DEFINED 4 AND 5 FEATURE NAMES]**
+
 
 ## Architecture and data flow
 
@@ -128,9 +128,8 @@ The Android source, Gradle build files, tests, README and GitHub Actions workflo
 
 The workflow at `.github/workflows/android.yml` is configured to run unit tests and build a debug APK on pushes/pull requests to `main` and on the `final-poe` tag. Confirm that the workflow run is green after the final source is uploaded.
 
-- GitHub repository: **[ADD GITHUB REPOSITORY URL]**
-- Latest successful GitHub Actions run: **[ADD GREEN WORKFLOW RUN URL]**
-- Final `final-poe` tag/commit: **[ADD TAG OR COMMIT URL]**
+- GitHub repository: https://github.com/ST10452972/SafeRoute-SA
+
 
 ## Release notes
 
@@ -148,7 +147,7 @@ The workflow at `.github/workflows/android.yml` is configured to run unit tests 
 
 ## Demonstration and publication evidence
 
-The final demonstration must be recorded on a physical Android phone, include a clear voice-over, show the app features working, and show redacted hosted Authentication/Firestore data. Replace each bold placeholder with the actual link or file before submission.
+The final demonstration must be recorded on a physical Android phone, include a clear voice-over, show the app features working, and show redacted hosted Authentication/Firestore data. 
 
 | Evidence required | Add link or screenshot |
 | --- | --- |
