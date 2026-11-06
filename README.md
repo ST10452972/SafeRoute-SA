@@ -102,25 +102,6 @@ Build commands from the project root:
 
 The debug APK is written to `app/build/outputs/apk/debug/app-debug.apk`. A debug APK is not the signed release APK required for publication evidence. The release signing configuration uses `SAFEROUTE_KEYSTORE_PATH`, `SAFEROUTE_KEY_ALIAS`, `SAFEROUTE_KEYSTORE_PASSWORD` and `SAFEROUTE_KEY_PASSWORD`. Keep the keystore and passwords outside this repository. Without those values, the release build is unsigned.
 
-## Testing and verification
-
-The existing local unit tests cover email/password validation, required values and South African phone-number validation. They do not verify live Firebase, FCM delivery, Nominatim availability or synchronization on a physical phone.
-
-| Test | Result/evidence |
-| --- | --- |
-| Gradle sync and debug build | **[ADD RESULT AND BUILD DATE]** |
-| Unit tests (`testDebugUnitTest`) | **[ADD PASS/FAIL RESULT AND TEST COUNT]** |
-| Install and launch on physical Android phone | **[ADD DEVICE/ANDROID VERSION AND RESULT]** |
-| Email registration/login and Google SSO | **[ADD RESULT; REDACT ACCOUNT DETAILS]** |
-| Create contact and verify it appears in the app and Firestore | **[ADD RESULT/SCREENSHOT LINK]** |
-| Submit incident and SOS; verify Firestore records | **[ADD RESULT/SCREENSHOT LINK]** |
-| Offline action followed by successful sync | **[ADD RESULT/SCREENSHOT LINK]** |
-| Nominatim police-station search | **[ADD PLACE TESTED AND RESULT]** |
-| FCM test notification and local Safety Check notification | **[ADD PHONE TEST RESULT/SCREENSHOT LINK]** |
-| Afrikaans and isiXhosa screen check | **[ADD RESULT/SCREENSHOT LINK]** |
-| Blob-storage upload and access-control test | **[IMPLEMENT STORAGE, THEN ADD TEST RESULT; CURRENTLY NOT IMPLEMENTED]** |
-
-Do not replace these fields with “passed” until you have run and observed the test. Do not include real contacts, passwords, private incident details, signing credentials or unredacted FCM tokens in screenshots.
 
 ## GitHub and automated build
 
@@ -146,24 +127,19 @@ The workflow at `.github/workflows/android.yml` is configured to run unit tests 
 - Added Firebase setup and build guidance. Final device testing and evidence still need to be added below.
 
 ## Demonstration and publication evidence
+Evidence required	Add link or screenshot
+Final narrated Part 3 phone demonstration	https://youtu.be/PDJOKB_rDpA?si=OwLBn5AqXN04Y0G- 
 
-The final demonstration must be recorded on a physical Android phone, include a clear voice-over, show the app features working, and show redacted hosted Authentication/Firestore data. 
+Login and Google SSO	 
+Dashboard and SOS confirmation	 
+Contacts displayed from Firestore	 
+Incident report and Firestore record	 
 
-| Evidence required | Add link or screenshot |
-| --- | --- |
-| Final narrated Part 3 phone demonstration | **[ADD UNLISTED VIDEO URL]** |
-| Login and Google SSO | **[ADD SCREENSHOT: `docs/images/login-sso.png`]** |
-| Dashboard and SOS confirmation | **[ADD SCREENSHOT: `docs/images/dashboard-sos.png`]** |
-| Contacts displayed from Firestore | **[ADD SCREENSHOT: `docs/images/contacts-firestore.png`]** |
-| Incident report and Firestore record | **[ADD SCREENSHOT: `docs/images/incident-firestore.png`]** |
-| Offline action and completed synchronization | **[ADD SCREENSHOT: `docs/images/offline-sync.png`]** |
-| FCM notification received on phone | **[ADD SCREENSHOT: `docs/images/notification.png`]** |
-| Afrikaans and isiXhosa screens | **[ADD SCREENSHOT: `docs/images/languages.png`]** |
-| Blob-storage upload and private access test | **[ADD AFTER IMPLEMENTING STORAGE]** |
-| Signed release APK | **[ADD SIGNED APK LINK OR SUBMISSION ITEM]** |
-| Play Console upload/listing evidence (if applicable) | **[ADD SCREENSHOT OR CONSOLE LINK]** |
+Offline action and completed synchronization	 
 
-Do not claim Play Store publication unless the app has actually been uploaded or published. Keep the release keystore and its passwords private.
+FCM notification received on phone	 
+Afrikaans and isiXhosa screens	  
+
 
 ## AI-use disclosure
 
