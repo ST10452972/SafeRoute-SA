@@ -1,256 +1,183 @@
 # SafeRoute SA
 
-**OPSC6312 Part 2 – App Prototype Development**
-**Student:** Jared Williams
-**Student Number:** ST10452972
+> **OPSC6312 Part 3 - Final app development and evaluation**  
+> Student: Jared Williams | Student number: ST10452972  
+> Android package: `com.example.opsc6312_poe` | Version: 2.0.0  
+> GitHub repository: **[ADD GITHUB REPOSITORY URL]**
 
-## About SafeRoute SA
+## Project purpose
 
-SafeRoute SA is an Android safety app prototype built in Kotlin for South African users. The main idea behind the app is to keep important safety features in one place instead of making the user go through different apps or menus.
+SafeRoute SA is an Android personal-safety prototype for South African users. It brings together account access, emergency contacts, incident reporting, an SOS record, a timed Safety Check, a search for police-station map listings, and English, Afrikaans and isiXhosa interface text.
 
-The current prototype includes user registration and login, a safety dashboard, emergency contacts, incident reporting, an SOS feature, settings, a Safety Check interface, and a search for nearby police stations.
+The project was designed around a practical constraint: a person may need to record information when their internet connection is unavailable. The contact, incident and SOS actions therefore enter an app-private SQLite outbox and are sent to Firestore when network access returns. The app is a prototype. It does not dispatch emergency services, send SMS messages, or automatically contact a user's trusted contacts.
 
-This version was developed for **Part 2 of the OPSC6312 PoE**, where the focus is on building a working prototype and demonstrating the required features. The final PoE will include some additional features that are not part of this prototype.
+## Design considerations
 
-## Demonstration Video
+| Consideration | Design decision |
+| --- | --- |
+| Emergency-first interaction | The dashboard gives the SOS action visual prominence and asks for confirmation before recording it. |
+| Connectivity loss | Contacts, incident reports and SOS records are kept in a local SQLite outbox. WorkManager attempts synchronization when the device has a network connection. |
+| Privacy | Optional location sharing is stored as a user preference. The app does not currently collect or share GPS location. Firestore records include the signed-in Firebase user ID. |
+| Account security | Firebase Authentication handles email/password authentication and Google SSO. Passwords are not written to Firestore. |
+| South African users | Phone-number validation accepts common South African formats. The interface includes English, Afrikaans and isiXhosa resources. |
+| Clear status | The Contacts screen distinguishes contacts waiting in the local queue from contacts read from Firestore. |
+| Reliability | Form validation and logging are used to help handle invalid input and diagnose API or Firebase failures. The final release still requires device testing. |
 
-Youtube video link
-https://youtu.be/CY-z236RZow?si=iRXX8ymZza2XqhgT 
+## Features and current status
 
-The demonstration video will show the main features of the app and explain what is happening using a voice-over. It will include:
+This table describes the current source code. “Implemented” means code exists; it does not mean the feature has been verified on the final phone build.
 
-* Registering a new user
-* Logging into the app
-* Changing settings
-* Saving information to Firestore
-* Searching for nearby police stations using the REST API
-* Adding an emergency contact
-* Reporting an incident
-* Using the SOS button
-* Viewing the stored information in the Firebase Console
+| Feature | Current implementation and limitation |
+| --- | --- |
+| Email registration and login | Firebase Authentication provides account registration and login. The app does not store passwords in Firestore. Configure Firebase before testing. |
+| Google SSO | Android Credential Manager obtains a Google ID token, which the app exchanges with Firebase Authentication. Requires Google enabled in Firebase, the correct Web client ID, SHA-1 fingerprints and a current `google-services.json`. |
+| Settings | The app can save a user's name, language and location-sharing preference. The preference does not activate GPS tracking or sharing, and profile values are not all loaded into the fields when Settings opens. |
+| SOS | A confirmation dialog precedes a local queue record that can synchronize to Firestore. The action does not call emergency services, send SMS, or notify contacts. |
+| Emergency contacts | The app queues a contact locally, writes it to Firestore, and listens for the signed-in user's contacts to display them. Locally queued contacts are marked as waiting to sync. Edit, delete and priority management are not implemented. |
+| Incident reports | Text category and description are queued locally and synchronized to Firestore. File/photo attachments and incident GPS coordinates are not currently implemented. |
+| REST API | Retrofit calls OpenStreetMap Nominatim over HTTPS to search for police-station map listings by South African town or suburb. It requires internet access and can return incomplete best matches; it is not an emergency dispatch service. |
+| Offline mode and sync | SQLite stores selected contact, incident and SOS actions. WorkManager retries Firestore writes when connectivity is available. Stable document IDs prevent duplicate records on retry. Verify this behavior on a physical phone. |
+| Push notifications | The app registers an FCM token, handles incoming messages and displays a notification. The timed Safety Check schedules a local missed-check notification. The app does not automatically send an alert to emergency contacts when SOS or a missed check occurs. |
+| Safety Check | A 30-minute local reminder can be started or ended. Missing it displays an on-device notification; it does not notify another person. WorkManager timing may be later than exactly 30 minutes. |
+| Languages | English, Afrikaans and isiXhosa string resources are included. Some system and error messages remain English. |
+| App icon | A custom SafeRoute launcher icon is included in the Android resources. |
+| Blob/object storage | **Not implemented yet.** The current app does not upload files to Firebase Storage or another object-storage service. Part 3 requires blob storage; complete and test a private file upload before claiming this requirement is met, or get lecturer approval for an alternative. |
+| Location and map features from Part 1 | Live GPS, location sharing, route display and a safety map are not implemented. |
 
+The assignment rubric includes “User Defined 4” and “User Defined 5” without naming those features in the brief. Confirm which features your lecturer expects and identify them in the demonstration. **[ADD THE LECTURER-APPROVED USER-DEFINED 4 AND 5 FEATURE NAMES]**
 
-## Features Implemented
-
-| Requirement         | How it is implemented                                                                                                                                                                                                |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Register and log in | Users can create an account and log in using Firebase Authentication with email and password. Passwords are handled by Firebase and are not stored directly in Firestore.                                            |
-| Settings            | Users can update their name, preferred language and location-sharing preference. This information is stored in their Firestore profile.                                                                              |
-| SOS                 | The dashboard has a large SOS button. The user must confirm the action before an SOS record is saved. The current prototype does not contact emergency services, send SMS messages or automatically notify contacts. |
-| Emergency contacts  | Users can save the name and phone number of a trusted emergency contact.                                                                                                                                             |
-| Incident reporting  | Users can select an incident category and enter a description. The report is then saved to Firestore.                                                                                                                |
-| Safety Check        | The app includes a basic 30-minute check-in interface as part of the safety dashboard. Automatic alerts for missed check-ins are planned for the final PoE.                                                          |
-| REST API            | Retrofit is used to make HTTPS requests to the OpenStreetMap Nominatim API and search for nearby police stations in South Africa.                                                                                    |
-| Input validation    | The app checks required fields, email addresses and passwords before submitting information. This helps prevent invalid information and reduces the chance of the app crashing.                                      |
-| Unit testing        | JUnit tests are used to test the main validation rules.                                                                                                                                                              |
-| GitHub Actions      | GitHub Actions runs the unit tests and builds a debug APK when changes are pushed to the repository.                                                                                                                 |
-
-The Part 2 brief requires the prototype to include the non-PoE features from the assessment instructions, use a REST API, handle invalid input without crashing, and include automated testing and GitHub Actions.
-
-## Design Considerations
-
-The design of SafeRoute SA was based around making the important safety features easy to find.
-
-The SOS button is one of the most noticeable parts of the dashboard because it is an important feature of the app. A confirmation message is shown before an SOS is saved so that it is not triggered accidentally.
-
-The app mainly uses blue for the normal interface because it fits the safety theme. Red is used for the SOS action so that it stands out from the rest of the interface.
-
-I also tried to keep the screens simple by using short labels, straightforward forms and clear feedback messages. This is especially important for a safety app because the user should not have to spend a long time trying to figure out what to do.
-
-Privacy was also considered when designing the prototype. Location sharing is treated as an optional setting. The current version does not collect the user's actual GPS location, make emergency phone calls or automatically contact emergency contacts.
-
-## Technical Design
-
-The basic structure of the application is:
+## Architecture and data flow
 
 ```text
-Android App
-Kotlin + Jetpack Compose
-        |
-        |-- Firebase Authentication
-        |     Email/password accounts
-        |
-        |-- Cloud Firestore
-        |     User profiles
-        |     Emergency contacts
-        |     Incident reports
-        |     SOS records
-        |
-        `-- Retrofit HTTPS Request
-              OpenStreetMap Nominatim
-              Police station search
+Android app (Kotlin, Jetpack Compose)
+  |-- Firebase Authentication (email/password and Google SSO)
+  |-- Retrofit HTTPS -> OpenStreetMap Nominatim (police-station search)
+  |-- SQLite outbox -> WorkManager -> Cloud Firestore
+  |-- Firestore listener -> display signed-in user's emergency contacts
+  |-- Firebase Cloud Messaging -> receive and display notifications
+  `-- WorkManager -> local 30-minute Safety Check notification
 ```
 
-## Main Libraries and SDKs
+### REST API
 
-* **Kotlin and Jetpack Compose** – used to build the Android application and user interface.
-* **Firebase Authentication** – used for registering and logging users in.
-* **Cloud Firestore** – used to store the application's online data.
-* **Retrofit** – used to make REST API requests.
-* **Gson** – used to handle JSON data from the API.
-* **JUnit** – used for unit testing.
+The app uses the public Nominatim search endpoint through Retrofit. It sends a query similar to `police station, Johannesburg, South Africa`, requests JSON results, limits the response to five records and restricts results to South Africa (`countrycodes=za`). Results include a display name and coordinates. Nominatim is a map search service, so results can be incomplete and must not be described as a complete or authoritative police-station directory.
 
-## Firestore Structure
+### Firestore records
 
-The main Firestore collections used by the application are:
+| Collection/document | Fields used by the prototype |
+| --- | --- |
+| `users/{firebaseUid}` | `fullName`, `email`, `language`, `locationSharing`, `fcmToken`, `createdAt` |
+| `emergencyContacts/{eventId}` | `userId`, `clientEventId`, `name`, `phone`, `createdAt` |
+| `incidents/{eventId}` | `userId`, `clientEventId`, `category`, `description`, `status`, `createdAt` |
+| `sos/{eventId}` | `userId`, `clientEventId`, `status`, `message`, `createdAt` |
 
-```text
-users/{firebaseUid}
+The Contacts screen reads Firestore using a listener filtered to the signed-in user's UID. It combines cloud records with contacts still pending in the local outbox. The app does not currently read/display incident or SOS history.
 
-    fullName
-    email
-    language
-    locationSharing
-    createdAt
+Firestore is configured separately in `app/google-services.json`. Publish owner-scoped rules before testing; see [FIREBASE_SETUP.md](FIREBASE_SETUP.md). Never use open test rules for the final demonstration.
 
+### Offline synchronization
 
-emergencyContacts/{documentId}
+1. The user submits a contact, text incident report or SOS action.
+2. The app saves the record to its private SQLite outbox and displays a queued status.
+3. WorkManager waits for network connectivity and uploads queued records to Firestore.
+4. The record is removed from the outbox only after the Firestore write succeeds.
 
-    userId
-    name
-    phone
-    createdAt
+Demonstrate this by recording a test action while offline, reconnecting, and showing the corresponding Firestore record after sync.
 
+## Setup and build
 
-incidents/{documentId}
+1. Open this project in Android Studio.
+2. Install the Android SDK Platform and Build Tools version 36 and use a compatible JDK (the project is configured for Java 11 source/target compatibility; use the Gradle/JDK combination required by Android Studio).
+3. Add `app/google-services.json` for the Firebase Android app with package `com.example.opsc6312_poe`. Keep this file out of GitHub.
+4. Enable Email/Password and Google providers in Firebase Authentication. Add the debug and release SHA-1 fingerprints. Put the Firebase Web client ID in `saferoute_google_web_client_id` in `app/src/main/res/values/strings.xml`.
+5. Create Firestore and publish the rules in [FIREBASE_SETUP.md](FIREBASE_SETUP.md). Enable Firebase Cloud Messaging and allow notifications on the phone.
+6. Sync Gradle, build, install on a physical Android phone and test the flows described below. The police-station REST API also requires internet access.
 
-    userId
-    category
-    description
-    status
-    createdAt
-
-
-sos/{documentId}
-
-    userId
-    status
-    message
-    createdAt
-```
-
-The `userId` field is used to link records back to the signed-in user.
-
-## Firebase Setup
-
-Before running the project, Firebase needs to be connected to the Android application.
-
-1. Create a Firebase project using the [Firebase Console](https://console.firebase.google.com/).
-
-2. Add an Android app using the package name:
-
-   `com.example.opsc6312_poe`
-
-3. Download the `google-services.json` file and place it inside:
-
-   `app/google-services.json`
-
-4. Open **Firebase Authentication** and enable **Email/Password** sign-in.
-
-5. Create a **Cloud Firestore** database.
-
-6. Open the **Rules** section in Firestore and use the rules provided in `FIREBASE_SETUP.md`.
-
-7. Sync the project in Android Studio.
-
-The `google-services.json` file is ignored by Git and should not be uploaded to GitHub.
-
-## Running the Project
-
-To run SafeRoute SA:
-
-1. Open the `OPSC6312POE` folder in Android Studio.
-2. Complete the Firebase setup above.
-3. Select **File → Sync Project with Gradle Files**.
-4. Connect an Android phone with USB debugging enabled, or use an Android emulator such as BlueStacks.
-5. Select the device.
-6. Click **Run** in Android Studio.
-
-The assessment requires the prototype to compile and run before the features can be assessed.
-
-## Building the Debug APK
-
-A debug APK can be created using:
-
-```powershell
-.\gradlew.bat assembleDebug
-```
-
-The APK will be created at:
-
-```text
-app\build\outputs\apk\debug\app-debug.apk
-```
-
-## Testing
-
-The unit tests can be run using:
+Build commands from the project root:
 
 ```powershell
 .\gradlew.bat testDebugUnitTest
+.\gradlew.bat assembleDebug
 ```
 
-The main areas tested include the validation rules used by the application.
+The debug APK is written to `app/build/outputs/apk/debug/app-debug.apk`. A debug APK is not the signed release APK required for publication evidence. The release signing configuration uses `SAFEROUTE_KEYSTORE_PATH`, `SAFEROUTE_KEY_ALIAS`, `SAFEROUTE_KEYSTORE_PASSWORD` and `SAFEROUTE_KEY_PASSWORD`. Keep the keystore and passwords outside this repository. Without those values, the release build is unsigned.
 
-Manual testing should also be done on the actual app. This includes checking:
+## Testing and verification
 
-* Invalid registration details
-* Successful registration
-* Successful login
-* Updating settings
-* Saving an emergency contact
-* Submitting an incident report
-* Confirming an SOS
-* Cancelling an SOS
-* Searching for police stations
-* Checking that records are saved correctly in Firestore
+The existing local unit tests cover email/password validation, required values and South African phone-number validation. They do not verify live Firebase, FCM delivery, Nominatim availability or synchronization on a physical phone.
 
-## GitHub and GitHub Actions
+| Test | Result/evidence |
+| --- | --- |
+| Gradle sync and debug build | **[ADD RESULT AND BUILD DATE]** |
+| Unit tests (`testDebugUnitTest`) | **[ADD PASS/FAIL RESULT AND TEST COUNT]** |
+| Install and launch on physical Android phone | **[ADD DEVICE/ANDROID VERSION AND RESULT]** |
+| Email registration/login and Google SSO | **[ADD RESULT; REDACT ACCOUNT DETAILS]** |
+| Create contact and verify it appears in the app and Firestore | **[ADD RESULT/SCREENSHOT LINK]** |
+| Submit incident and SOS; verify Firestore records | **[ADD RESULT/SCREENSHOT LINK]** |
+| Offline action followed by successful sync | **[ADD RESULT/SCREENSHOT LINK]** |
+| Nominatim police-station search | **[ADD PLACE TESTED AND RESULT]** |
+| FCM test notification and local Safety Check notification | **[ADD PHONE TEST RESULT/SCREENSHOT LINK]** |
+| Afrikaans and isiXhosa screen check | **[ADD RESULT/SCREENSHOT LINK]** |
+| Blob-storage upload and access-control test | **[IMPLEMENT STORAGE, THEN ADD TEST RESULT; CURRENTLY NOT IMPLEMENTED]** |
 
-The project includes a GitHub Actions workflow:
+Do not replace these fields with “passed” until you have run and observed the test. Do not include real contacts, passwords, private incident details, signing credentials or unredacted FCM tokens in screenshots.
 
-```text
-.github/workflows/android.yml
-```
+## GitHub and automated build
 
-The workflow is used to automatically test and build the Android project when changes are pushed to GitHub.
+The Android source, Gradle build files, tests, README and GitHub Actions workflow belong in the repository. Upload the project files directly; do not submit a ZIP of the source as a substitute for the GitHub repository. Exclude `app/google-services.json`, `local.properties`, generated build/cache folders, keystores and credentials.
 
-The workflow:
+The workflow at `.github/workflows/android.yml` is configured to run unit tests and build a debug APK on pushes/pull requests to `main` and on the `final-poe` tag. Confirm that the workflow run is green after the final source is uploaded.
 
-1. Sets up Java 17.
-2. Runs the JUnit tests.
-3. Builds the debug APK.
-4. Uploads the APK as a workflow artifact.
+- GitHub repository: **[ADD GITHUB REPOSITORY URL]**
+- Latest successful GitHub Actions run: **[ADD GREEN WORKFLOW RUN URL]**
+- Final `final-poe` tag/commit: **[ADD TAG OR COMMIT URL]**
 
-After pushing the project to GitHub, the **Actions** tab can be used to check whether the build completed successfully.
+## Release notes
 
-The OPSC6312 brief specifically requires the project to use GitHub and GitHub Actions for automated testing and building.
+### Version 2.0.0 - Part 3 revision
 
-## Part 2 Scope and Future Work
+- Added Google SSO using Android Credential Manager and Firebase Authentication.
+- Added SQLite outbox storage and WorkManager synchronization for contacts, incident reports and SOS records.
+- Added a Firestore contact listener so saved contacts display in the app, including queued contacts waiting for synchronization.
+- Restored the Nominatim REST API police-station search. Results are best-match map listings and may be incomplete.
+- Added Firebase Cloud Messaging token registration and client-side notification handling, plus a local 30-minute Safety Check reminder.
+- Added English, Afrikaans and isiXhosa resources and language selection.
+- Improved sign-in screen contrast and readability.
+- Removed incident photo uploads from this build; **blob storage remains outstanding for Part 3**.
+- Added Firebase setup and build guidance. Final device testing and evidence still need to be added below.
 
-The current version of SafeRoute SA is focused on the requirements for **Part 2**. The aim was to get the main application working first, including authentication, settings, online data storage, REST API integration, testing and GitHub Actions.
+## Demonstration and publication evidence
 
-Some features are left for the final PoE because they are specifically identified as PoE-only requirements in the assessment brief.
+The final demonstration must be recorded on a physical Android phone, include a clear voice-over, show the app features working, and show redacted hosted Authentication/Firestore data. Replace each bold placeholder with the actual link or file before submission.
 
-These include:
+| Evidence required | Add link or screenshot |
+| --- | --- |
+| Final narrated Part 3 phone demonstration | **[ADD UNLISTED VIDEO URL]** |
+| Login and Google SSO | **[ADD SCREENSHOT: `docs/images/login-sso.png`]** |
+| Dashboard and SOS confirmation | **[ADD SCREENSHOT: `docs/images/dashboard-sos.png`]** |
+| Contacts displayed from Firestore | **[ADD SCREENSHOT: `docs/images/contacts-firestore.png`]** |
+| Incident report and Firestore record | **[ADD SCREENSHOT: `docs/images/incident-firestore.png`]** |
+| Offline action and completed synchronization | **[ADD SCREENSHOT: `docs/images/offline-sync.png`]** |
+| FCM notification received on phone | **[ADD SCREENSHOT: `docs/images/notification.png`]** |
+| Afrikaans and isiXhosa screens | **[ADD SCREENSHOT: `docs/images/languages.png`]** |
+| Blob-storage upload and private access test | **[ADD AFTER IMPLEMENTING STORAGE]** |
+| Signed release APK | **[ADD SIGNED APK LINK OR SUBMISSION ITEM]** |
+| Play Console upload/listing evidence (if applicable) | **[ADD SCREENSHOT OR CONSOLE LINK]** |
 
-* Single sign-on (SSO)
-* Offline mode with synchronisation
-* Real-time push notifications
-* Support for at least two South African languages
-* GPS/location functionality
-* Real location sharing
-* Additional Safety Check functionality
-* Other improvements based on feedback from Part 2
+Do not claim Play Store publication unless the app has actually been uploaded or published. Keep the release keystore and its passwords private.
 
-The final PoE also requires the app to be prepared for publication on the Google Play Store and to include the additional PoE features.
+## AI-use disclosure
 
-## Conclusion
+OpenAI Codex was used to assist with reviewing the assignment and project, suggesting and editing Kotlin/Gradle code, debugging Firebase and Android build issues, restoring the REST API screen, adding Firestore contact display, improving sign-in contrast, and drafting project documentation. AI assistance is cited here as OpenAI Codex (OpenAI, 2026). I remain responsible for checking the implementation, Firebase configuration, security rules, build results, physical-device behavior and final evidence. Results must be filled in above only after I personally perform and observe those checks.
 
-SafeRoute SA is currently a working safety-focused Android prototype. The main features have been built around the original idea of giving users quick access to useful safety tools from one application.
+## References
 
-Part 2 focuses on getting the core application working correctly. The prototype uses Firebase for authentication and data storage, Retrofit for the REST API connection, and GitHub Actions for automated testing and building. Further features can be added during the final PoE as the application is developed and improved.
-
-
-
-
+1. Android Developers. (2026). *Credential Manager*. Available at: https://developer.android.com/identity/sign-in/credential-manager.
+2. Android Developers. (2026). *Notification runtime permission*. Available at: https://developer.android.com/develop/ui/compose/notifications/notification-permission.
+3. Firebase. (2026). *Authenticate with Google on Android*. Available at: https://firebase.google.com/docs/auth/android/google-signin.
+4. Firebase. (2026). *Get realtime updates with Cloud Firestore*. Available at: https://firebase.google.com/docs/firestore/query-data/listen.
+5. Firebase. (2026). *Cloud Firestore Security Rules*. Available at: https://firebase.google.com/docs/firestore/security/get-started.
+6. Firebase. (2026). *Receive messages in Android apps*. Available at: https://firebase.google.com/docs/cloud-messaging/android/receive.
+7. OpenStreetMap Foundation. (2026). *Nominatim Search API*. Available at: https://nominatim.org/release-docs/latest/api/Search/.
+8. OpenAI. (2026). *Codex*, AI coding assistant used to assist with this project.
+9. GitHub. (2026). *GitHub Actions documentation*. Available at: https://docs.github.com/actions.

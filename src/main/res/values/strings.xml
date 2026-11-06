@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">SafeRoute SA</string>
+    <string name="saferoute_google_web_client_id" translatable="false">224585899316-tdev5t59p3kj0tkoqpg05utom20akkd6.apps.googleusercontent.com</string>
+    <string name="tagline">Your safety. Your control.</string>
+    <string name="auth_intro">Register securely, keep emergency contacts close, and report incidents.</string>
+    <string name="name">Full name</string>
+    <string name="email">Email</string>
+    <string name="password">Password (minimum 6 characters)</string>
+    <string name="create_account">Create secure account</string>
+    <string name="login">Log in securely</string>
+    <string name="continue_google">Continue with Google</string>
+    <string name="already_have_account">I already have an account</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="home">Home</string>
+    <string name="contacts">Contacts</string>
+    <string name="report">Report</string>
+    <string name="nearby_police">Find nearby police stations</string>
+    <string name="settings">Settings</string>
+    <string name="dashboard">Safety dashboard</string>
+    <string name="safety_status">Safety status</string>
+    <string name="ready_safety">Ready when you need it. Add trusted contacts before an emergency.</string>
+    <string name="sos">SOS</string>
+    <string name="get_help">Get help now</string>
+    <string name="safety_check">Safety Check</string>
+    <string name="start_check">Start a timed check-in when travelling or meeting someone.</string>
+    <string name="start_30_check">Start 30-minute Safety Check</string>
+    <string name="end_check">End Safety Check</string>
+    <string name="quick_actions">Quick actions</string>
+    <string name="add_contact">Add contact</string>
+    <string name="report_incident">Report incident</string>
+    <string name="activate_sos">Activate SOS?</string>
+    <string name="sos_explanation">This records an active emergency event in your SafeRoute account. Confirm only when you need help.</string>
+    <string name="cancel">Cancel</string>
+    <string name="activate">Activate SOS</string>
+    <string name="contact_intro">Save a trusted person who should be contacted in an emergency.</string>
+    <string name="contact_name">Contact name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="save_contact">Save emergency contact</string>
+    <string name="saved_contacts">Saved contacts</string>
+    <string name="no_contacts">No contacts saved yet.</string>
+    <string name="contact_waiting_to_sync">Saved on this phone; waiting to sync.</string>
+    <string name="incident_intro">Share clear details to help build community safety awareness.</string>
+    <string name="incident_category">Category (for example, suspicious activity)</string>
+    <string name="description">Description</string>
+    <string name="submit_incident">Submit incident report</string>
+    <string name="find_help_title">Find help near you</string>
+    <string name="resource_intro">Search OpenStreetMap for matching police-station listings in a South African town or suburb. Results may be incomplete.</string>
+    <string name="town_suburb">Town or suburb</string>
+    <string name="find_police">Search police stations</string>
+    <string name="safety_resources">Safety resources</string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_intro">Location sharing is an optional preference. You can switch it off at any time.</string>
+    <string name="language">App language</string>
+    <string name="sharing_on">Optional location sharing: On</string>
+    <string name="sharing_off">Optional location sharing: Off</string>
+    <string name="save_settings">Save settings</string>
+    <string name="logout">Log out</string>
+    <string name="notification_title">SafeRoute safety alert</string>
+    <string name="notification_body">You have a new safety update.</string>
+    <string name="notification_channel">Safety alerts</string>
+    <string name="working">Working…</string>
+    <string name="english">English</string><string name="afrikaans">Afrikaans</string><string name="isixhosa">isiXhosa</string><string name="check_active">A 30-minute check-in is active. Remember to confirm that you are safe.</string>
+    <string name="check_missed_title">Safety check-in missed</string><string name="check_missed_body">Your 30-minute check-in ended. Open SafeRoute and confirm you are safe.</string>
 </resources>

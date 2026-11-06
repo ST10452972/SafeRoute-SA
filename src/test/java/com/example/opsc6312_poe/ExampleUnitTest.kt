@@ -26,4 +26,11 @@ class ValidationTest {
     fun `requires safety form values`() {
         assertEquals("Contact is required.", Validation.required("Contact", "  "))
     }
+
+    @Test
+    fun `validates South African contact numbers`() {
+        assertNull(Validation.southAfricanPhone("082 123 4567"))
+        assertNull(Validation.southAfricanPhone("+27 (82) 123-4567"))
+        assertEquals("Enter a valid South African phone number.", Validation.southAfricanPhone("12345"))
+    }
 }

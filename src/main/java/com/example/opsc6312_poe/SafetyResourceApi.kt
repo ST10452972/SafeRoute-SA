@@ -4,7 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-/** OpenStreetMap Nominatim is used as the prototype's public safety-resource REST API. */
+/** Queries OpenStreetMap's public Nominatim REST API for South African police stations. */
 interface SafetyResourceApi {
     @GET("search")
     suspend fun search(
